@@ -297,6 +297,7 @@ qwen2vl_series = {
     'Qwen2-VL-2B-Instruct-AWQ': partial(Qwen2VLChat, model_path='Qwen/Qwen2-VL-2B-Instruct-AWQ', min_pixels=1280*28*28, max_pixels=16384*28*28),
     'Qwen2-VL-2B-Instruct-GPTQ-Int4': partial(Qwen2VLChat, model_path='Qwen/Qwen2-VL-2B-Instruct-GPTQ-Int4', min_pixels=1280*28*28, max_pixels=16384*28*28),
     'Qwen2-VL-2B-Instruct-GPTQ-Int8': partial(Qwen2VLChat, model_path='Qwen/Qwen2-VL-2B-Instruct-GPTQ-Int8', min_pixels=1280*28*28, max_pixels=16384*28*28),
+    'Qwen2.5-VL-3B-Instruct': partial(Qwen2VLChat, model_path='Qwen/Qwen2.5-VL-3B-Instruct', min_pixels=1280*28*28, max_pixels=16384*28*28, use_custom_prompt=False),
     'XinYuan-VL-2B-Instruct': partial(Qwen2VLChat, model_path='Cylingo/Xinyuan-VL-2B', min_pixels=1280*28*28, max_pixels=16384*28*28),
 }
 
