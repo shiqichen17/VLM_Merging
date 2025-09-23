@@ -8,7 +8,7 @@ from transformers import (
     AutoModel,
     AutoModelForVision2Seq,
     Qwen2VLForConditionalGeneration,
-    # Qwen2_5_VLForConditionalGeneration
+    Qwen2_5_VLForConditionalGeneration
 )
 from huggingface_hub import login
 import re
@@ -71,11 +71,16 @@ def merge_models(model1_path, model2_path, output_dir, alpha, mode='base', base_
         excluded_keys = {'embed_tokens.weight', 'lm_head.weight'}
 
     elif 'Qwen' in model1_path:
-        model1 = Qwen2VLForConditionalGeneration.from_pretrained(
-                        model1_path, torch_dtype="auto"
-                    ).model
-        # model1 = Qwen2_5_VLForConditionalGeneration.from_pretrained(model1_path,torch_dtype="auto")
-        model2=AutoModelForCausalLM.from_pretrained(model2_path,torch_dtype="auto").model
+        # Check if it's Qwen2.5-VL model
+        if 'Qwen2.5-VL' in model1_path or 'Qwen2_5-VL' in model1_path:
+            model1 = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+                model1_path, torch_dtype=torch.bfloat16
+            ).model
+        else:
+            model1 = Qwen2VLForConditionalGeneration.from_pretrained(
+                model1_path, torch_dtype="auto"
+            ).model
+        model2 = AutoModelForCausalLM.from_pretrained(model2_path, torch_dtype="auto").model
         excluded_keys = {'embed_tokens.weight'}
 
     else:
