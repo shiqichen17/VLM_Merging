@@ -70,15 +70,14 @@ def merge_models(model1_path, model2_path, output_dir, alpha, mode='base', base_
         ).model
         excluded_keys = {'embed_tokens.weight', 'lm_head.weight'}
 
+    elif "Qwen2.5" in model1_path:
+        model1 = Qwen2_5_VLForConditionalGeneration.from_pretrained(model1_path,torch_dtype="auto").model
+        model2=AutoModelForCausalLM.from_pretrained(model2_path,torch_dtype="auto").model
+        excluded_keys = {'embed_tokens.weight'}
     elif 'Qwen' in model1_path:
         model1 = Qwen2VLForConditionalGeneration.from_pretrained(
                         model1_path, torch_dtype="auto"
                     ).model
-        model2=AutoModelForCausalLM.from_pretrained(model2_path,torch_dtype="auto").model
-        excluded_keys = {'embed_tokens.weight'}
-    elif "Qwen2.5" in model1_path:
-        breakpoint()
-        model1 = Qwen2_5_VLForConditionalGeneration.from_pretrained(model1_path,torch_dtype="auto").model
         model2=AutoModelForCausalLM.from_pretrained(model2_path,torch_dtype="auto").model
         excluded_keys = {'embed_tokens.weight'}
 
@@ -154,7 +153,8 @@ def merge_models(model1_path, model2_path, output_dir, alpha, mode='base', base_
                     else:
                         state_dict1[layer].copy_(alpha * state_dict1[layer] + (1 - alpha) * state_dict2[layer])
                 elif mode == 'base':
-                    state_dict1[layer].copy_(alpha * state_dict1[layer] + (1 - alpha) * state_dict2[layer])
+                    layer1="language_model."+layer if "Qwen2.5" in model1_path else layer
+                    state_dict1[layer1].copy_(alpha * state_dict1[layer1] + (1 - alpha) * state_dict2[layer])
             else:
                 print(layer)
 
